@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Controllers",
+    "\\Models",
+    "\\Views",
+    "\\Views\\Home",
+    "\\Views\\Shared",
+    "\\wwwroot",
+    "\\wwwroot\\images",
+    "\\wwwroot\\images\\css",
+    "\\wwwroot\\lib"
+  ],
+  "SelectedNode": "\\wwwroot\\images\\coldstorage.jpg",
+  "PreviewInSolutionExplorer": false
+}
