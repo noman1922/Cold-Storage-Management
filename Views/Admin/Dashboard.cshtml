@@ -1,0 +1,296 @@
+@using System.Linq
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<style>
+    body {
+        background: #f8f9fa;
+    }
+    
+    .admin-card {
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+        margin-bottom: 20px;
+    }
+    
+    .admin-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    .stats-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .table-responsive {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    
+    .badge-admin {
+        background: linear-gradient(45deg, #dc3545, #e4606d);
+    }
+    
+    .badge-user {
+        background: linear-gradient(45deg, #0d6efd, #4dabf7);
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <!-- Welcome Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card admin-card bg-dark text-white">
+                <div class="card-body">
+                    <h1 class="display-5"><i class="bi bi-shield-check"></i> Admin Dashboard</h1>
+                    <p class="lead mb-0">Manage cold storage system</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <a href="/Admin/Users" style="text-decoration: none;">
+            <div class="card admin-card text-white" style="background: linear-gradient(45deg, #0d6efd, #4dabf7);">
+                <div class="card-body text-center">
+                    <i class="bi bi-people stats-icon"></i>
+                    <h5 class="card-title">Total Users</h5>
+                    <h2 class="display-6">@ViewBag.TotalUsers</h2>
+                </div>
+            </div>
+        </a>
+    </div>
+    
+    <div class="col-md-3">
+        <a href="/Admin/StorageProducts" style="text-decoration: none;">
+            <div class="card admin-card text-white" style="background: linear-gradient(45deg, #198754, #40c057);">
+                <div class="card-body text-center">
+                    <i class="bi bi-box stats-icon"></i>
+                    <h5 class="card-title">Products in Storage</h5>
+                    <h2 class="display-6">@ViewBag.TotalProducts</h2>
+                </div>
+            </div>
+        </a>
+    </div>
+    
+    <div class="col-md-3">
+        <a href="/Admin/Payments" style="text-decoration: none;">
+            <div class="card admin-card text-white" style="background: linear-gradient(45deg, #fd7e14, #ffa94d);">
+                <div class="card-body text-center">
+                    <i class="bi bi-cash-coin stats-icon"></i>
+                    <h5 class="card-title">Total Payments</h5>
+                    <h2 class="display-6">৳@ViewBag.TotalPayments</h2>
+                </div>
+            </div>
+        </a>
+    </div>
+    
+    <div class="col-md-3">
+        <a href="/Admin/StorageProducts" style="text-decoration: none;">
+            <div class="card admin-card text-white" style="background: linear-gradient(45deg, #6f42c1, #9775fa);">
+                <div class="card-body text-center">
+                    <i class="bi bi-calendar-day stats-icon"></i>
+                    <h5 class="card-title">Storage Days</h5>
+                    <h2 class="display-6">@ViewBag.TotalStorageDays</h2>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card admin-card">
+                <div class="card-header bg-light">
+                    <h4><i class="bi bi-lightning-charge"></i> Quick Actions</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="/Admin/Users" class="btn btn-primary">
+                            <i class="bi bi-people"></i> Manage Users
+                        </a>
+                        <a href="/Admin/StorageProducts" class="btn btn-success">
+                            <i class="bi bi-box"></i> View Storage Products
+                        </a>
+                        <a href="/Admin/Payments" class="btn btn-warning">
+                            <i class="bi bi-cash-coin"></i> Payment History
+                        </a>
+                        <a href="/Admin/ColdRooms" class="btn btn-info">
+                            <i class="bi bi-building"></i> Cold Rooms
+                        </a>
+                        <a href="/Account/Logout" class="btn btn-danger">
+                            <i class="bi bi-box-arrow-right"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Payments -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card admin-card">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5><i class="bi bi-cash-coin"></i> Recent Payments</h5>
+                    <a href="/Admin/Payments" class="btn btn-sm btn-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.Payments != null)
+                                {
+                                    @foreach (var payment in ((List<ColdStorageManagement.Models.Payment>)ViewBag.Payments).Take(5))
+                                    {
+                                        <tr>
+                                            <td>User #@payment.UserId</td>
+                                            <td>৳@payment.Amount</td>
+                                            <td>@payment.PaymentDate.ToString("MM/dd")</td>
+                                            <td><span class="badge bg-info">@payment.PaymentType</span></td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Products in Storage -->
+        <div class="col-md-6">
+            <div class="card admin-card">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5><i class="bi bi-box"></i> Recent Products in Storage</h5>
+                    <a href="/Admin/StorageProducts" class="btn btn-sm btn-success">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>User</th>
+                                    <th>Qty</th>
+                                    <th>Storage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.Products != null)
+                                {
+                                    @foreach (var product in ((List<ColdStorageManagement.Models.Product>)ViewBag.Products).Take(5))
+                                    {
+                                        <tr>
+                                            <td>@product.Name</td>
+                                            <td>User #@product.UserId</td>
+                                            <td>@product.Quantity kg</td>
+                                            <td>@product.ColdRoom?.Name</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Users -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card admin-card">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5><i class="bi bi-people"></i> Recent Users</h5>
+                    <a href="/Admin/Users" class="btn btn-sm btn-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Full Name</th>
+                                    <th>Phone</th>
+                                    <th>Role</th>
+                                    <th>Joined</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (ViewBag.Users != null)
+                                {
+                                    @foreach (var user in ((List<ColdStorageManagement.Models.User>)ViewBag.Users).Take(10))
+                                    {
+                                        <tr>
+                                            <td>@user.Username</td>
+                                            <td>@user.FullName</td>
+                                            <td>@user.Phone</td>
+                                            <td>
+                                                @if (user.Role == "Admin")
+                                                {
+                                                    <span class="badge badge-admin">@user.Role</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-user">@user.Role</span>
+                                                }
+                                            </td>
+                                            <td>@user.CreatedDate.ToString("yyyy-MM-dd")</td>
+                                            <td>
+                                                @if (user.IsActive)
+                                                {
+                                                    <span class="badge bg-success">Active</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">Inactive</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a href="/Admin/EditUser/@user.Id" class="btn btn-sm btn-warning">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <a href="/Admin/ToggleUserStatus/@user.Id" class="btn btn-sm @(user.IsActive ? "btn-danger" : "btn-success")">
+                                                    @if (user.IsActive)
+                                                    {
+                                                        <i class="bi bi-person-x"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="bi bi-person-check"></i>
+                                                    }
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">

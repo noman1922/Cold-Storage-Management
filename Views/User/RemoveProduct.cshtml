@@ -1,0 +1,156 @@
+@{
+    ViewData["Title"] = "Remove Product - Payment";
+}
+
+<style>
+    .payment-option {
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 10px 0;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .payment-option:hover {
+        border-color: #0d6efd;
+        background: #f8f9fa;
+    }
+    
+    .payment-option.selected {
+        border-color: #0d6efd;
+        background: #e7f1ff;
+    }
+    
+    .payment-icon {
+        font-size: 2rem;
+        margin-right: 15px;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h4><i class="bi bi-exclamation-triangle"></i> Remove Product - Payment Required</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Product Info -->
+                    @if (ViewBag.Product != null)
+                    {
+                        <div class="alert alert-info">
+                            <h5>Product: @ViewBag.Product.Name</h5>
+                            <p>Quantity: @ViewBag.Product.Quantity kg | Days Stored: @ViewBag.DaysStored days</p>
+                            <p class="mb-0">Total Amount to Pay: <strong class="text-danger">৳@ViewBag.TotalAmount</strong></p>
+                        </div>
+                        
+                        <!-- Payment Options -->
+                        <form method="post" action="/User/ProcessRemoval" id="paymentForm">
+                            <input type="hidden" name="productId" value="@ViewBag.Product.Id" />
+                            <input type="hidden" name="paymentMethod" id="paymentMethodInput" />
+                            
+                            <h5 class="mb-3">Select Payment Method:</h5>
+                            
+                            <!-- Cash Payment -->
+                            <div class="payment-option" onclick="selectPayment('cash')" id="cashOption">
+                                <div class="d-flex align-items-center">
+                                    <div class="payment-icon text-success">
+                                        <i class="bi bi-cash"></i>
+                                    </div>
+                                    <div>
+                                        <h5>Cash Payment</h5>
+                                        <p class="mb-0">Pay with cash at our office</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Card Payment -->
+                            <div class="payment-option" onclick="selectPayment('card')" id="cardOption">
+                                <div class="d-flex align-items-center">
+                                    <div class="payment-icon text-primary">
+                                        <i class="bi bi-credit-card"></i>
+                                    </div>
+                                    <div>
+                                        <h5>Card Payment</h5>
+                                        <p class="mb-0">Pay with credit/debit card</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Mobile Banking -->
+                            <div class="payment-option" onclick="selectPayment('mobile')" id="mobileOption">
+                                <div class="d-flex align-items-center">
+                                    <div class="payment-icon text-warning">
+                                        <i class="bi bi-phone"></i>
+                                    </div>
+                                    <div>
+                                        <h5>Mobile Banking</h5>
+                                        <p class="mb-0">bKash, Nagad, Rocket</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Submit Button -->
+                            <div class="mt-4">
+                                <button type="submit" class="btn btn-success btn-lg w-100" id="payButton" disabled>
+                                    <i class="bi bi-credit-card"></i> Confirm Payment of ৳@ViewBag.TotalAmount
+                                </button>
+                                <a href="/User/Dashboard" class="btn btn-secondary w-100 mt-2">
+                                    <i class="bi bi-x-circle"></i> Cancel
+                                </a>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger">
+                            <p>Product not found.</p>
+                            <a href="/User/Dashboard" class="btn btn-primary">Back to Dashboard</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedPayment = '';
+    
+    function selectPayment(method) {
+        selectedPayment = method;
+        
+        // Remove selection from all options
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+        
+        // Add selection to clicked option
+        document.getElementById(method + 'Option').classList.add('selected');
+        
+        // Enable pay button
+        document.getElementById('payButton').disabled = false;
+        
+        // Update button text
+        document.getElementById('payButton').innerHTML = 
+            `<i class="bi bi-credit-card"></i> Pay with ${method.toUpperCase()} - ৳@ViewBag.TotalAmount`;
+        
+        // Set hidden input value
+        document.getElementById('paymentMethodInput').value = method;
+    }
+    
+    // Form submission
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+        if (!selectedPayment) {
+            e.preventDefault();
+            alert('Please select a payment method');
+            return;
+        }
+        
+        // Confirm payment
+        if (!confirm(`Confirm ${selectedPayment.toUpperCase()} payment of ৳@ViewBag.TotalAmount?`)) {
+            e.preventDefault();
+        }
+    });
+</script>

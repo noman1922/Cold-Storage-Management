@@ -1,0 +1,77 @@
+@model List<ColdStorageManagement.Models.User>
+
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<div class="container-fluid py-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="bi bi-people"></i> Manage Users</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Phone</th>
+                        <th>Role</th>
+                        <th>Joined</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.Id</td>
+                            <td>@user.Username</td>
+                            <td>@user.FullName</td>
+                            <td>@user.Phone</td>
+                            <td>
+                                @if (user.Role == "Admin")
+                                {
+                                    <span class="badge bg-danger">Admin</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-primary">User</span>
+                                }
+                            </td>
+                            <td>@user.CreatedDate.ToString("yyyy-MM-dd")</td>
+                            <td>
+                                @if (user.IsActive)
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Inactive</span>
+                                }
+                            </td>
+                            <td>
+                                <a href="/Admin/EditUser/@user.Id" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil"></i> Edit
+                                </a>
+                                <a href="/Admin/ToggleUserStatus/@user.Id" 
+                                   class="btn btn-sm @(user.IsActive ? "btn-danger" : "btn-success")">
+                                    @if (user.IsActive)
+                                    {
+                                        <text>Deactivate</text>
+                                    }
+                                    else
+                                    {
+                                        <text>Activate</text>
+                                    }
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

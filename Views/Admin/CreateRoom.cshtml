@@ -1,0 +1,122 @@
+
+
+@model ColdStorageManagement.Models.ColdRoom
+
+@{
+    ViewData["Title"] = "Create Cold Room";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4><i class="bi bi-plus-circle"></i> Create New Cold Room</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="/Admin/CreateRoom">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Room Name *</label>
+                                <input type="text" class="form-control" name="Name" required>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Room Type *</label>
+                                <select class="form-control" name="Type" required>
+                                    <option value="Frozen">Frozen Storage (-18°C to -25°C)</option>
+                                    <option value="Chilled">Chilled Storage (0°C to 4°C)</option>
+                                    <option value="Ambient">Ambient Storage (15°C to 25°C)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Temperature (°C) *</label>
+                                <input type="number" class="form-control" name="Temperature" step="0.1" required>
+                                <small class="text-muted">Example: -18 for frozen, 4 for chilled, 20 for ambient</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Total Capacity (kg) *</label>
+                                <input type="number" class="form-control" name="Capacity" step="0.1" min="1" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Price per kg per day (BDT) *</label>
+                                <input type="number" class="form-control" name="PricePerKgPerDay" step="0.01" min="0" required>
+                                <small class="text-muted">Example: 10 for frozen, 6 for chilled, 4 for ambient</small>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Status</label>
+                                <select class="form-control" name="IsAvailable">
+                                    <option value="true">Available</option>
+                                    <option value="false">Unavailable</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Description</label>
+                            <textarea class="form-control" name="Description" rows="3" placeholder="Optional description..."></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-check-circle"></i> Create Room
+                            </button>
+                            <a href="/Admin/ColdRooms" class="btn btn-secondary btn-lg">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Pricing Guide -->
+            <div class="card mt-4">
+                <div class="card-header bg-light">
+                    <h5><i class="bi bi-info-circle"></i> Pricing Guide</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card border-primary">
+                                <div class="card-body text-center">
+                                    <h6 class="text-primary">Frozen Storage</h6>
+                                    <p class="mb-1">-18°C to -25°C</p>
+                                    <h5>৳10/kg/day</h5>
+                                    <small>For meat, seafood, frozen foods</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-success">
+                                <div class="card-body text-center">
+                                    <h6 class="text-success">Chilled Storage</h6>
+                                    <p class="mb-1">0°C to 4°C</p>
+                                    <h5>৳6/kg/day</h5>
+                                    <small>For dairy, vegetables, fruits</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card border-warning">
+                                <div class="card-body text-center">
+                                    <h6 class="text-warning">Ambient Storage</h6>
+                                    <p class="mb-1">15°C to 25°C</p>
+                                    <h5>৳4/kg/day</h5>
+                                    <small>For dry goods, packaging</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

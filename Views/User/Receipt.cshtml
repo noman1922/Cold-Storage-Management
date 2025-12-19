@@ -1,0 +1,152 @@
+@{
+    ViewData["Title"] = "Payment Receipt";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Receipt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: white;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .receipt {
+            max-width: 500px;
+            margin: 0 auto;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 30px;
+            background: #f8fff8;
+        }
+        
+        .header {
+            text-align: center;
+            border-bottom: 2px dashed #28a745;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .receipt-item {
+            padding: 10px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .total {
+            font-weight: bold;
+            font-size: 18px;
+            color: #dc3545;
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 2px dashed #28a745;
+        }
+        
+        .btn-print {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 10px;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .status-success {
+            color: #198754;
+            font-weight: bold;
+        }
+        
+        @@media print {
+            .btn-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt">
+        <!-- Header -->
+        <div class="header">
+            <h1 class="status-success">✅ PAYMENT SUCCESSFUL</h1>
+            <h2>❄️ Cold Storage Management</h2>
+            <p>Payment Receipt</p>
+            <p>Date: @DateTime.Now.ToString("yyyy-MM-dd HH:mm")</p>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="receipt-item">
+            <h3>Payment Information</h3>
+            <p><strong>Receipt No:</strong> #@ViewBag.Payment?.Id</p>
+            <p><strong>Payment Date:</strong> @ViewBag.Payment?.PaymentDate.ToString("yyyy-MM-dd HH:mm")</p>
+            <p><strong>Payment Type:</strong> @ViewBag.Payment?.PaymentType</p>
+            <p><strong>Status:</strong> <span class="status-success">@ViewBag.Payment?.Status</span></p>
+        </div>
+
+        <!-- Product Details -->
+        <div class="receipt-item">
+            <h3>Product Information</h3>
+            <p><strong>Product:</strong> @ViewBag.ProductName</p>
+            <p><strong>Quantity:</strong> @ViewBag.ProductQuantity kg</p>
+            <p><strong>Storage Days:</strong> @ViewBag.DaysStored days</p>
+            <p><strong>Removed on:</strong> @DateTime.Now.ToString("yyyy-MM-dd HH:mm")</p>
+        </div>
+
+        <!-- Payment Breakdown -->
+        <div class="receipt-item">
+            <h3>Payment Breakdown</h3>
+            <table style="width: 100%;">
+                <tr>
+                    <td>Storage Amount (@ViewBag.DaysStored days):</td>
+                    <td style="text-align: right;">৳@(ViewBag.Payment?.Amount - 100)</td>
+                </tr>
+                <tr>
+                    <td>Removal Fee:</td>
+                    <td style="text-align: right;">৳100</td>
+                </tr>
+                <tr class="total">
+                    <td>TOTAL PAID:</td>
+                    <td style="text-align: right;">৳@ViewBag.Payment?.Amount</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Status Message -->
+        <div style="background: #d1e7dd; padding: 15px; border-radius: 5px; margin-top: 20px;">
+            <h4 style="margin-top: 0;">📦 Product Status</h4>
+            <p style="margin-bottom: 0;">
+                The product <strong>@ViewBag.ProductName</strong> has been successfully removed from cold storage.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 30px; color: #666;">
+            <p>Thank you for using our service!</p>
+            <p>📍 Contact: 017XX-XXXXXX | 📧 info@coldstorage.com</p>
+            <p><em>Developed by team 'BINARY BEASTS'</em></p>
+        </div>
+    </div>
+
+    <!-- Print Button -->
+    <button class="btn-print" onclick="window.print()">🖨️ Print Receipt</button>
+    
+    <!-- Back Button -->
+    <a href="/User/Dashboard" class="btn-print" style="background: #6c757d; margin-top: 10px;">
+        ← Back to Dashboard
+    </a>
+
+    <!-- Auto-print option (optional) -->
+    <script>
+        // Uncomment to auto-print
+        // window.onload = function() {
+        //     window.print();
+        // };
+    </script>
+</body>
+</html>

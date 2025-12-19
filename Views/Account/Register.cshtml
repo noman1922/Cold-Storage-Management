@@ -1,0 +1,99 @@
+@model ColdStorageManagement.Models.User
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>Register</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Register" method="post">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    
+                    <div class="mb-3">
+                        <label asp-for="Username" class="form-label"></label>
+                        <input asp-for="Username" class="form-control" />
+                        <span asp-validation-for="Username" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Phone" class="form-label"></label>
+                        <input asp-for="Phone" class="form-control" placeholder="01XXXXXXXXX" />
+                        <span asp-validation-for="Phone" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label"></label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                        <small class="text-muted">Password must be at least 6 characters</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="ConfirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" name="ConfirmPassword" id="ConfirmPassword" class="form-control" />
+                        <span id="confirmPasswordError" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label asp-for="Address" class="form-label"></label>
+                        <textarea asp-for="Address" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Register</button>
+                    <a asp-action="Login" class="btn btn-link">Already have an account? Login</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const password = document.getElementById('Password').value;
+            const confirmPassword = document.getElementById('ConfirmPassword').value;
+            const errorElement = document.getElementById('confirmPasswordError');
+            
+            if (password !== confirmPassword) {
+                errorElement.textContent = 'Passwords do not match';
+                e.preventDefault();
+            } else {
+                errorElement.textContent = '';
+            }
+            
+            if (password.length < 6) {
+                e.preventDefault();
+            }
+        });
+        
+        // Phone number validation for Bangladesh format
+        document.getElementById('Phone').addEventListener('input', function(e) {
+            const phone = e.target.value;
+            const phonePattern = /^01[3-9]\d{8}$/;
+            
+            if (phone && !phonePattern.test(phone)) {
+                e.target.setCustomValidity('Please enter a valid Bangladesh phone number (01XXXXXXXXX)');
+            } else {
+                e.target.setCustomValidity('');
+            }
+        });
+    </script>
+}

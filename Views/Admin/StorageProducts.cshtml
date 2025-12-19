@@ -1,0 +1,47 @@
+@model List<ColdStorageManagement.Models.Product>
+
+@{
+    ViewData["Title"] = "Products in Storage";
+}
+
+<div class="container-fluid py-4">
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            <h4><i class="bi bi-box"></i> Products in Storage</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Quantity</th>
+                        <th>User</th>
+                        <th>Cold Room</th>
+                        <th>Entry Date</th>
+                        <th>Days</th>
+                        <th>Amount Due</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model)
+                    {
+                        var days = (DateTime.Now - product.EntryDate).Days;
+                        var amount = product.Quantity * product.PricePerDay * days;
+                        
+                        <tr>
+                            <td>@product.Name</td>
+                            <td>@product.Category</td>
+                            <td>@product.Quantity kg</td>
+                            <td>@product.User?.Username</td>
+                            <td>@product.ColdRoom?.Name</td>
+                            <td>@product.EntryDate.ToString("yyyy-MM-dd")</td>
+                            <td>@days days</td>
+                            <td>৳@amount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

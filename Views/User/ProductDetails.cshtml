@@ -1,0 +1,133 @@
+@model ColdStorageManagement.Models.Product
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+
+<style>
+    body {
+        background-color: white;
+    }
+    
+    .detail-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card detail-card">
+                <div class="card-header bg-primary text-white">
+                    <h4><i class="bi bi-box-seam"></i> Product Details</h4>
+                </div>
+                <div class="card-body">
+                    @if (Model != null)
+                    {
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Basic Information</h5>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><strong>Name:</strong></td>
+                                        <td>@Model.Name</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Category:</strong></td>
+                                        <td><span class="badge bg-info">@Model.Category</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Quantity:</strong></td>
+                                        <td>@Model.Quantity kg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Price per Day:</strong></td>
+                                        <td>৳@Model.PricePerDay/kg</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <h5>Storage Information</h5>
+                                <table class="table table-borderless">
+                                    <tr>
+                                        <td><strong>Storage Room:</strong></td>
+                                        <td>@(Model.ColdRoom?.Name ?? "N/A")</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Entry Date:</strong></td>
+                                        <td>@Model.EntryDate.ToString("yyyy-MM-dd")</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Status:</strong></td>
+                                        <td>
+                                            @if (Model.IsActive)
+                                            {
+                                                <span class="badge bg-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Removed</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Payment:</strong></td>
+                                        <td>
+                                            @if (Model.PaymentCompleted)
+                                            {
+                                                <span class="badge bg-success">Completed</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-warning">Pending</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Storage Details -->
+                        <div class="card mt-3">
+                            <div class="card-header bg-light">
+                                <h5>Storage Calculation</h5>
+                            </div>
+                            <div class="card-body">
+                                @{
+                                    var daysStored = (DateTime.Now - Model.EntryDate).Days;
+                                    var amountDue = Model.Quantity * Model.PricePerDay * daysStored;
+                                }
+                                <p><strong>Days Stored:</strong> @daysStored days</p>
+                                <p><strong>Current Amount Due:</strong> ৳@amountDue</p>
+                                <p><strong>Prepaid Amount:</strong> ৳@Model.TotalAmountDue</p>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="mt-4 d-flex justify-content-between">
+                            <a href="/User/Dashboard" class="btn btn-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to Dashboard
+                            </a>
+                            
+                            @if (Model.IsActive)
+                            {
+                                <a href="/User/RemoveProduct/@Model.Id" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i> Remove Product
+                                </a>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <p>Product not found.</p>
+                            <a href="/User/Dashboard" class="btn btn-primary">Back to Dashboard</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
